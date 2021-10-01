@@ -1,1 +1,1 @@
-# graduation_project
+# Recipe blog
