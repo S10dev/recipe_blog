@@ -1,0 +1,64 @@
+{% extends "base.html" %} 
+{% block title %} Рецепты {% endblock %}
+{% block content %}
+<body class="body">
+    {% include 'nav.html' with from='index' %}
+    <main class="main container">
+        <div class="main__header">
+            <h1 class="main__title">Рецепты</h1>
+            <ul class="tags">
+                <li class="tags__item">
+                    <a id="breakfast" class="tags__checkbox tags__checkbox_style_orange tags__checkbox_active" href="#"></a>
+                    <span class="tags__label">Завтрак</span>
+                </li>
+                <li class="tags__item">
+                    <a id="lunch" class="tags__checkbox tags__checkbox_style_green tags__checkbox_active" href="#"></a>
+                    <span for="lunch" class="tags__label">Обед</span>
+                </li>
+                <li class="tags__item">
+                    <a id="dinner" class="tags__checkbox tags__checkbox_style_purple tags__checkbox_active" href="#"></a>
+                    <label for="dinner" class="tags__label">Ужин</label>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card-list">
+            {% for recipe in page %}
+            <div class="card" data-id="120">
+                {% load thumbnail %}
+                {% thumbnail recipe.picture "960x339" crop="center" upscale=True as im %}
+                <a href="#" class="link" target="_blank"><img src="{{ im.url }}" alt="Какой-то текст" class="card__image"></a>
+                {% endthumbnail %}  
+                <div class="card__body">
+                    <a class="card__title link" href="#" target="_blank">{{ recipe.title }}</a>
+                    <ul class="card__items">
+                        {% for t in recipe.tag.all %}
+                        {% if t.title == "Обед" %}
+                        <li class="card__item"><span class="badge badge_style_green">{{ t }}</span></li>
+                        {% elif t.title == "Завтрак" %}
+                        <li class="card__item"><span class="badge badge_style_orange">{{ t }}</span></li>
+                        {% elif t.title == "Ужин" %}
+                        <li class="card__item"><span class="badge badge_style_purple">{{ t }}</span></li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                    <div class="card__items card__items_column">
+                        <p class="card__text"><span class="icon-time"></span> {{ recipe.cooking_time }} мин.</p>
+                        <p class="card__text"><span class="icon-user"></span> <a href="#" style="color: black">{{ recipe.author }}</a></p>
+                    </div>
+                </div>
+                <div class="card__footer">
+                    <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+</body>
+
+{% if page.has_other_pages %}
+    {% include "paginator.html" with items=page paginator=paginator %}
+{% endif %}
+
+{% include 'js_scripts.html' %}
+{% endblock %}

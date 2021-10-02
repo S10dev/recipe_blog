@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator
 
 
 User = get_user_model()
@@ -15,7 +16,9 @@ class Recipe(models.Model):
     text = models.TextField(max_length=100, blank=True, null=True)
     components = models.ManyToManyField('Component')
     tag = models.ManyToManyField('Tag')
-    cooking_time = models.DateTimeField()
+    cooking_time = models.IntegerField(
+        validators=[MinValueValidator(1, 'Value cannot be lower than 1')]
+        )
     slug = models.SlugField()
 
     def __str__(self):
